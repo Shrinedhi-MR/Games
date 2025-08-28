@@ -816,6 +816,8 @@
       localStorage.removeItem(LS_VIEW_KEY);
       localStorage.removeItem(LS_TIMER_START);
       localStorage.removeItem(LS_TIMER_END);
+      stopTimerUI(true);
+      resetAllLevels();
       updateHubButtons();
       showScreen('intro');
     }
@@ -876,6 +878,62 @@
       if (_timerHandle) { clearInterval(_timerHandle); _timerHandle = null; }
       if (hide) document.getElementById('missionTimer').style.display = 'none';
       else updateTimerUI();
+    }
+
+    // Hard reset of all level states and UI so a new mission truly starts fresh
+    function resetAllLevels() {
+      // Level 1
+      try {
+        l1_inited = false;
+        l1_solvedGrid = false;
+        l1_positions = new Set(['2,2']);
+        const xg = document.getElementById('l1_xGrid'); if (xg) xg.innerHTML = '';
+        const ng = document.getElementById('l1_numGrid'); if (ng) ng.innerHTML = '';
+        const chk = document.getElementById('l1_checkBtn'); if (chk) chk.disabled = true;
+        const warn = document.getElementById('l1_warn'); if (warn) warn.classList.add('hidden');
+        const ok = document.getElementById('l1_ok'); if (ok) ok.classList.add('hidden');
+        const succ = document.getElementById('l1_success'); if (succ) succ.classList.add('hidden');
+        const code = document.getElementById('l1_code'); if (code) code.value = '';
+      } catch(_) {}
+
+      // Level 2
+      try {
+        l2_inited = false; l2_isDown = false; l2_path = []; l2_letters = []; l2_last = null;
+        const grid = document.getElementById('l2_grid'); if (grid) grid.innerHTML = '';
+        const msg = document.getElementById('l2_message'); if (msg) msg.classList.add('hidden');
+        const cells = document.getElementById('l2_cells'); if (cells) cells.textContent = '0/30';
+        const lets = document.getElementById('l2_letters'); if (lets) lets.textContent = '0/6';
+      } catch(_) {}
+
+      // Level 3
+      try {
+        const l3ok = document.getElementById('l3_ok'); if (l3ok) l3ok.classList.add('hidden');
+        const l3bad = document.getElementById('l3_bad'); if (l3bad) l3bad.classList.add('hidden');
+        const l3in = document.getElementById('l3_code'); if (l3in) l3in.value = '';
+        const a = document.getElementById('l3_audio'); if (a) { a.pause(); a.currentTime = 0; }
+      } catch(_) {}
+
+      // Level 4
+      try { l4_reset(); } catch(_) {}
+
+      // Level 5
+      try {
+        l5_solved = false;
+        const c2 = document.getElementById('l5_c2'); if (c2) c2.textContent = '';
+        const b2 = document.getElementById('l5_b2'); if (b2) { b2.textContent = '?'; b2.classList.add('input'); b2.onclick = l5_showInput; }
+        const fin = document.getElementById('l5_final'); if (fin) fin.value = '';
+        const ok5 = document.getElementById('l5_ok'); if (ok5) ok5.classList.add('hidden');
+        const bad5 = document.getElementById('l5_bad'); if (bad5) bad5.classList.add('hidden');
+        const hin = document.getElementById('l5_hiddenAnswer'); if (hin) { hin.value=''; hin.style.display='none'; }
+        const chk5 = document.getElementById('l5_checkBtn'); if (chk5) chk5.style.display='none';
+      } catch(_) {}
+
+      // Level 6
+      try {
+        const ok6 = document.getElementById('l6_ok'); if (ok6) ok6.classList.add('hidden');
+        const bad6 = document.getElementById('l6_bad'); if (bad6) bad6.classList.add('hidden');
+        const code6 = document.getElementById('l6_code'); if (code6) code6.value = '';
+      } catch(_) {}
     }
 
     /* ================== LEVEL 1 ================== */
