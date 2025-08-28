@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Puzzle Game Hub - All Levels in One</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* -------- Global / Theme -------- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #131a26, #1a2332 45%, #2d3748 100%);
+      color: #e6f7ff;
+      overflow-x: hidden;
+    }
+
+    .screen {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity .35s ease, transform .35s ease, visibility .35s ease;
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 12px 0;
+      line-height: 1.2;
+    }
+    .title {
+      text-align: center;
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-size: 2.2rem;
+      background: linear-gradient(45deg, #00ff88, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+              background-clip: text;
+    }
+    .subtitle {
+      text-align: center;
+      margin: 0 0 28px 0;
+      color: #b9d7ff;
+      opacity: .9;
+    }
+
+    /* -------- Buttons -------- */
+    .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 14px 26px;
+      border-radius: 12px;
+      background: radial-gradient(120% 120% at 50% 0%, #0ff 0%, #0f8 45%, #07c 100%);
+      color: #051018;
+      font-weight: 700;
+      letter-spacing: .3px;
+      box-shadow: 0 10px 28px rgba(0,255,200,.18), inset 0 0 0 1px rgba(0,0,0,.12);
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      will-change: transform;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(0,255,200,.24), inset 0 0 0 1px rgba(0,0,0,.1);
+      filter: brightness(1.06);
+    }
+    .btn:active {
+      transform: translateY(0);
+      filter: brightness(.98);
+    }
+    .btn.secondary {
+      background: linear-gradient(135deg, #3b82f6, #22d3ee);
+      color: #08131a;
+    }
+    .btn.ghost {
+      background: transparent;
+      color: #a6e8ff;
+      border: 1px solid rgba(166,232,255,.35);
+      box-shadow: none;
+    }
+    .btn.ghost:hover {
+      border-color: rgba(166,232,255,.75);
+    }
+    .btn.inline {
+      padding: 10px 18px;
+      border-radius: 22px;
+      font-size: .95rem;
+    }
+    .btn:disabled {
+      background: linear-gradient(135deg, #3a3f46, #2a2f36);
+      color: #7c8793;
+      cursor: not-allowed;
+      box-shadow: none;
+      filter: none;
+      transform: none;
+    }
+    .glow {
+      animation: glowPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%   { box-shadow: 0 0 0 rgba(0,255,200,.0); }
+      50%  { box-shadow: 0 0 18px rgba(0,255,200,.35); }
+      100% { box-shadow: 0 0 0 rgba(0,255,200,.0); }
+    }
+    .pulse {
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* -------- Hub -------- */
+    .hub-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      margin: 22px auto 12px auto;
+      max-width: 1000px;
+    }
+    .level-card {
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid rgba(0, 255, 200, .15);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .level-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 255, 200, .35);
+      box-shadow: 0 16px 34px rgba(0,0,0,.32);
+    }
+    .level-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #a7f3d0;
+    }
+    .level-desc {
+      color: #b9d7ff;
+      opacity: .9;
+      font-size: .95rem;
+      margin-bottom: 12px;
+      min-height: 38px;
+    }
+
+    /* -------- Layout controls -------- */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0 18px 0;
+      position: sticky; top: 0; z-index: 50;
+      background: linear-gradient(135deg, rgba(19,26,38,.85), rgba(26,35,50,.85));
+      backdrop-filter: blur(6px);
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,255,200,.18);
+    }
+    .spacer { height: 8px; }
+
+    .cta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .panel {
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid rgba(0, 255, 200, .15);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 12px 26px rgba(0,0,0,.25);
+    }
+
+    /* -------- Level 1: Matrix Security System -------- */
+    .l1-wrap .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 64px);
+      gap: 6px;
+      margin: 14px auto;
+      background: rgba(0,0,0,.45);
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid rgba(0, 255, 136, 0.3);
+      width: max-content;
+    }
+    .l1-wrap .cell {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 255, 136, 0.35);
+      color: #00ff88;
+      background: rgba(255,255,255,.06);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease;
+    }
+    .l1-wrap .cell:hover { transform: scale(1.05); background: rgba(0,255,136,.16); }
+    .l1-wrap .cell.pre { background: rgba(255, 107, 107, 0.25); color: #ff6b6b; cursor: not-allowed; }
+    .l1-wrap .cell.placed { background: rgba(0,255,136,.22); color: #00ff88; }
+    .l1-note { color: #b9d7ff; opacity: .9; text-align: center; }
+
+    /* -------- Level 2: Security Breach Grid -------- */
+    .l2-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 52px);
+      grid-template-rows: repeat(5, 52px);
+      gap: 4px;
+      margin: 16px auto;
+      background: #000;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #ff6600;
+      width: max-content;
+      user-select: none;
+    }
+    .l2-cell {
+      width: 52px; height: 52px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+      border: 2px solid #444;
+      font-weight: 800; font-size: 18px;
+      color: #fff;
+    }
+    .l2-cell.letter { background: linear-gradient(135deg, #ff4444, #cc2222); border-color: #ff6666; box-shadow: 0 0 14px rgba(255, 68, 68, .6); }
+    .l2-cell.connected { background: linear-gradient(135deg, #00ff88, #00cc66); border-color: #00ff88; color: #041; }
+    .l2-cell.current { animation: pulse 1s infinite; }
+
+    /* -------- Level 3: Audio Decoder -------- */
+    .l3-audio {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .l3-audio audio { width: 320px; max-width: 86vw; }
+
+    /* -------- Level 4: Code Cracking (full) -------- */
+    .l4-wrap .lock-display { text-align: center; margin: 24px 0; }
+    .l4-wrap .lock-icon { font-size: 3rem; color: #ffd700; text-shadow: 0 0 18px rgba(255,215,0,.35); margin-bottom: 10px; }
+    .l4-wrap .code-slots { display: flex; justify-content: center; gap: 12px; margin: 16px 0; }
+    .l4-wrap .code-slot { width: 72px; height: 72px; background: rgba(255,255,255,.08); border: 3px solid rgba(255,215,0,.55); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; color: #ffd700; font-family: 'Courier New', monospace; }
+    .l4-wrap .clue-section { background: rgba(0,0,0,.35); border-radius: 12px; padding: 18px; margin: 18px 0; border: 1px solid rgba(0,255,136,.18); }
+    .l4-wrap .clue-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 0; padding: 10px; background: rgba(255,255,255,.04); border-left: 4px solid rgba(0,212,255,.45); border-radius: 8px; }
+    .l4-wrap .clue-numbers { display: flex; gap: 8px; }
+    .l4-wrap .clue-digit { width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(0,212,255,.18); border: 2px solid rgba(0,212,255,.45); color: #00d4ff; font-size: 20px; font-weight: 800; font-family: 'Courier New', monospace; }
+    .l4-wrap .clue-text { color: #cfe8ff; opacity: .95; }
+    .l4-wrap .code-input { background: rgba(0,0,0,.6); border: 3px solid #00d4ff; border-radius: 12px; padding: 16px; color: #00d4ff; font-size: 28px; text-align: center; width: 180px; letter-spacing: 10px; font-weight: 800; font-family: 'Courier New', monospace; }
+    .l4-wrap .warning { display: none; background: rgba(255, 107, 107, .14); border: 1px solid #ff6b6b; color: #ff8585; padding: 12px 14px; border-radius: 10px; text-align: center; }
+    .l4-wrap .success { display: none; background: rgba(0,255,136,.14); border: 1px solid #00ff88; color: #00ff88; padding: 16px; border-radius: 12px; text-align: center; }
+    .l4-wrap .attempts { text-align: center; color: #b9d7ff; }
+
+    /* -------- Level 5: Cross Number Puzzle (full) -------- */
+    .l5-crosses {
+      display: flex; gap: 26px; flex-wrap: wrap; justify-content: center; margin: 12px 0 18px 0;
+    }
+    .l5-cross {
+      display: grid;
+      grid-template-areas:
+        ". t ."
+        "l c r"
+        ". b .";
+      grid-template-columns: 58px 58px 58px;
+      grid-template-rows: 58px 58px 58px;
+      gap: 4px;
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 212, 255, .35);
+      background: rgba(0,0,0,.4);
+    }
+    .l5-cell {
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 212, 255, .12);
+      border: 1px solid rgba(0, 212, 255, .35);
+      border-radius: 8px;
+      color: #00d4ff; font-weight: 700;
+    }
+    .l5-cell.t { grid-area: t; }
+    .l5-cell.l { grid-area: l; }
+    .l5-cell.c { grid-area: c; }
+    .l5-cell.r { grid-area: r; }
+    .l5-cell.b { grid-area: b; }
+    .l5-cell.input { background: rgba(255,215,0,.12); border-color: #ffd700; color: #ffd700; cursor: pointer; }
+    .l5-note { text-align: center; color: #b9d7ff; }
+    .l5-number-input { background: rgba(0,0,0,.6); border: 2px solid #ffd700; border-radius: 8px; padding: 10px; color: #ffd700; font-weight: 800; text-align: center; width: 90px; font-family: 'Courier New', monospace; }
+
+    /* -------- Level 6: Security Access Terminal -------- */
+    .l6-panel .code {
+      width: 200px; text-align: center;
+      padding: 14px; border-radius: 10px;
+      border: 3px solid #ffd700; background: rgba(0,0,0,.55);
+      color: #ffd700; letter-spacing: 3px; font-size: 1.25rem; font-weight: 700;
+      font-family: Consolas, 'Courier New', monospace;
+    }
+    .l6-directive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 16px 0 24px 0; }
+    .l6-panelBox { background: rgba(0,0,0,.4); border: 2px solid rgba(0,212,255,.3); border-radius: 12px; padding: 14px; text-align: center; }
+    .l6-panelId { color: #00d4ff; font-weight: 800; margin-bottom: 10px; letter-spacing: 2px; }
+    .l6-seq { display: flex; justify-content: center; gap: 8px; padding: 10px; border-radius: 8px; background: rgba(0,0,0,.5); border: 1px solid rgba(0,212,255,.2); }
+    .l6-cmd { font-size: 1.8rem; color: #00d4ff; font-weight: 800; }
+    .l6-hint { text-align: center; color: #ffd700; background: rgba(255,215,0,.08); border: 1px solid rgba(255,215,0,.35); border-radius: 10px; padding: 12px; margin-top: 10px; }
+    .msg-ok { background: rgba(0,255,136,.14); border: 1px solid #00ff88; color: #00ff88; padding: 12px 14px; border-radius: 10px; }
+    .msg-bad { background: rgba(255, 107, 107, .14); border: 1px solid #ff6b6b; color: #ff8585; padding: 12px 14px; border-radius: 10px; }
+
+    /* Utility */
+    .muted { color: #b9d7ff; opacity: .9; }
+    .center { text-align: center; }
+    .field { margin: 10px 0; }
+    .stack { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; }
+    .hidden { display: none !important; }
+
+    /* -------- Intro / Final screens -------- */
+    .hero {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; min-height: 60vh; text-align: center;
+    }
+    .hero h1 { font-size: 2.4rem; }
+    .hero p { max-width: 720px; color: #cfe8ff; }
+    .badge {
+      display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: 700;
+      background: rgba(0,255,136,.12); border: 1px solid rgba(0,255,136,.35); color: #00ff88;
+    }
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 14px 0;
+    }
+    .stat {
+      background: rgba(0,0,0,.35); border: 1px solid rgba(0,255,200,.18); border-radius: 12px; padding: 14px; text-align: center;
+    }
+
+    /* -------- Floating mission timer -------- */
+    .timer-badge {
+      position: fixed; top: 10px; right: 10px; z-index: 9999;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(0,255,200,.35);
+      color: #a7f3d0;
+      padding: 8px 12px; border-radius: 999px;
+      font-weight: 700; letter-spacing: .5px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="missionTimer" class="timer-badge">⏱️ 00:00</div>
+  <!-- INTRO -->
+  <section id="intro" class="screen active">
+    <div class="hero">
+      <span class="badge">ALERT • CYBER INCIDENT</span>
+      <h1 class="title">ESCAPE ROOM: SYSTEM RESTORE</h1>
+      <p class="subtitle">Coordinate all 6 operations to restore the facility. Your mission time starts when you begin. Progress is saved and you can return at any time.</p>
+      <div class="row">
+        <button class="btn" onclick="beginEmergency()">🚨 Begin Emergency</button>
+      </div>
+    </div>
+  </section>
+  <!-- HUB -->
+  <section id="hub" class="screen">
+    <h1 class="title">🕹️ Puzzle Game Hub</h1>
+    <p class="subtitle">Solve each level to unlock the next. Progress is saved automatically.</p>
+
+    <div class="hub-grid">
+      <div class="level-card">
+        <div class="level-title">Level 1 — Matrix Security System</div>
+        <div class="level-desc">Place sensors without forming a straight line and decode the access matrix.</div>
+        <button id="btnLevel1" class="btn glow" onclick="openLevel(1)">Start Level 1</button>
+      </div>
+
+      <div class="level-card">
+        <div class="level-title">Level 2 — Security Breach Grid</div>
+        <div class="level-desc">Connect the letters to form BREACH while visiting all cells.</div>
+        <button id="btnLevel2" class="btn" onclick="openLevel(2)" disabled>Level 2</button>
+      </div>
+
+      <div class="level-card">
+        <div class="level-title">Level 3 — Audio Decoder</div>
+        <div class="level-desc">Listen carefully and enter the correct access credential.</div>
+        <button id="btnLevel3" class="btn" onclick="openLevel(3)" disabled>Level 3</button>
+      </div>
+
+      <div class="level-card">
+        <div class="level-title">Level 4 — Code Cracking</div>
+        <div class="level-desc">Deduce the 3-digit code from multiple logic clues.</div>
+        <button id="btnLevel4" class="btn" onclick="openLevel(4)" disabled>Level 4</button>
+      </div>
+
+      <div class="level-card">
+        <div class="level-title">Level 5 — Cross Number</div>
+        <div class="level-desc">Find the missing number based on cross patterns, then submit the final code.</div>
+        <button id="btnLevel5" class="btn" onclick="openLevel(5)" disabled>Level 5</button>
+      </div>
+
+      <div class="level-card">
+        <div class="level-title">Level 6 — Security Access Terminal</div>
+        <div class="level-desc">Enter the final 4-digit authorization code to finish the run.</div>
+        <button id="btnLevel6" class="btn" onclick="openLevel(6)" disabled>Level 6</button>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn ghost inline" onclick="resetProgress()">Reset Progress</button>
+    </div>
+  </section>
+
+  <!-- FINAL / MISSION COMPLETE -->
+  <section id="final" class="screen">
+    <div class="panel">
+      <div class="hero">
+        <h2 class="title">🎉 MISSION ACCOMPLISHED!</h2>
+        <p class="subtitle">All systems restored successfully.</p>
+        <div class="stats">
+          <div class="stat">
+            <div class="muted">Total Time</div>
+            <div id="final_time" style="font-size:1.6rem;font-weight:800;margin-top:6px;">00:00</div>
+          </div>
+          <div class="stat">
+            <div class="muted">Missions Completed</div>
+            <div style="font-size:1.6rem;font-weight:800;margin-top:6px;">6</div>
+          </div>
+        </div>
+        <div class="panel" style="max-width:760px;">
+          <strong>Outstanding teamwork!</strong>
+          <p class="muted" style="margin-top:6px;">Your rapid response successfully defended the company against the cyber attack. All departments are secure and normal operations can resume.</p>
+        </div>
+        <div class="row">
+          <button class="btn inline" onclick="restartMission()">🔁 New Mission</button>
+          <button class="btn inline ghost" onclick="backToHub()">↩️ Return to Hub</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Level Navigation (shown inside levels) -->
+  <template id="navTemplate">
+    <div class="topbar">
+      <button class="btn ghost inline" onclick="backToHub()">← Back to Hub</button>
+      <div class="row">
+        <button id="prevLevelBtn" class="btn inline secondary" onclick="prevLevel()">Previous</button>
+        <button id="nextLevelBtn" class="btn inline" onclick="nextLevel()" disabled>Next Level →</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- LEVEL 1 -->
+  <section id="level1" class="screen">
+    <div class="panel l1-wrap">
+      <h2 class="title">🧩 Level 1 — Matrix Security System</h2>
+      <p class="subtitle">Place 6 sensors (X) without any three forming a straight line. Then enter the access code from the number matrix using the empty positions.</p>
+
+      <div class="spacer"></div>
+
+      <div class="center muted">Sensor Grid</div>
+      <div class="grid" id="l1_xGrid"></div>
+
+      <div class="row center">
+        <button class="btn inline" onclick="l1_reset()">Reset Grid</button>
+        <button id="l1_checkBtn" class="btn inline" onclick="l1_check()" disabled>Check Sensor Placement</button>
+      </div>
+
+      <div id="l1_warn" class="center hidden muted">⚠️ A straight line of three X's detected. Adjust your placement.</div>
+      <div id="l1_ok" class="center hidden msg-ok">✅ Sensor grid configured. Now decode the access code.</div>
+
+      <div class="spacer"></div>
+      <div class="center muted">Number Matrix</div>
+      <div class="grid" id="l1_numGrid"></div>
+
+      <div class="stack">
+        <input id="l1_code" maxlength="9" class="l6-panel code" placeholder="Enter code" />
+        <button class="btn inline" onclick="l1_verifyCode()">Unlock</button>
+      </div>
+
+      <div id="l1_success" class="center hidden msg-ok">🎉 Access granted! Level 1 complete.</div>
+    </div>
+  </section>
+
+  <!-- LEVEL 2 -->
+  <section id="level2" class="screen">
+    <div class="panel">
+      <h2 class="title">🚨 Level 2 — Security Breach Grid</h2>
+      <p class="subtitle">Drag a continuous path visiting all cells and connecting letters to form BREACH.</p>
+
+      <div id="l2_grid" class="l2-grid"></div>
+
+      <div class="row muted">
+        <div>Cells Filled: <span id="l2_cells">0/30</span></div>
+        <div>Letters Connected: <span id="l2_letters">0/6</span></div>
+      </div>
+
+      <div class="row">
+        <button class="btn inline" onclick="l2_reset()">Reset</button>
+      </div>
+
+      <div id="l2_message" class="center hidden msg-ok">🎉 Security override complete! BREACH confirmed.</div>
+    </div>
+  </section>
+
+  <!-- LEVEL 3 -->
+  <section id="level3" class="screen">
+    <div class="panel">
+      <h2 class="title">🔊 Level 3 — Audio Decoder</h2>
+      <p class="subtitle">Listen to the classified audio and enter the correct access credential.</p>
+
+      <div class="l3-audio">
+        <audio id="l3_audio" controls preload="auto">
+          <source src="bullet_code_2684.wav" type="audio/wav" />
+          Your browser does not support the audio element.
+        </audio>
+        <div class="muted">Tip: Hear the rhythm/code within the pattern.</div>
+      </div>
+
+      <div class="stack">
+        <input id="l3_code" class="l6-panel code" maxlength="8" placeholder="Enter credential" />
+        <button class="btn inline" onclick="l3_submit()">Submit</button>
+      </div>
+
+      <div id="l3_ok" class="center hidden msg-ok">✅ ACCESS CREDENTIAL ACCEPTED! Level 3 complete.</div>
+      <div id="l3_bad" class="center hidden msg-bad">❌ Invalid credential. Try again.</div>
+    </div>
+  </section>
+
+  <!-- LEVEL 4 -->
+  <section id="level4" class="screen">
+    <div class="panel l4-wrap">
+      <h2 class="title">🔐 Level 4 — Will You Crack the Code?</h2>
+      <p class="subtitle">Analyze the clues. Each clue tells you how many digits are correct and if they're in the correct position.</p>
+
+      <div class="lock-display">
+        <div class="lock-icon" id="l4_lock">🔒</div>
+        <div class="code-slots">
+          <div class="code-slot" id="l4_slot1">?</div>
+          <div class="code-slot" id="l4_slot2">?</div>
+          <div class="code-slot" id="l4_slot3">?</div>
+        </div>
+      </div>
+
+      <div class="clue-section">
+        <div class="clue-row">
+          <div class="clue-numbers">
+            <div class="clue-digit">6</div>
+            <div class="clue-digit">8</div>
+            <div class="clue-digit">2</div>
+          </div>
+          <div class="clue-text">One number is correct and well placed</div>
+        </div>
+        <div class="clue-row">
+          <div class="clue-numbers">
+            <div class="clue-digit">6</div>
+            <div class="clue-digit">1</div>
+            <div class="clue-digit">4</div>
+          </div>
+          <div class="clue-text">One number is correct but wrong placed</div>
+        </div>
+        <div class="clue-row">
+          <div class="clue-numbers">
+            <div class="clue-digit">2</div>
+            <div class="clue-digit">0</div>
+            <div class="clue-digit">6</div>
+          </div>
+          <div class="clue-text">Two numbers are correct but wrong placed</div>
+        </div>
+        <div class="clue-row">
+          <div class="clue-numbers">
+            <div class="clue-digit">7</div>
+            <div class="clue-digit">3</div>
+            <div class="clue-digit">8</div>
+          </div>
+          <div class="clue-text">Nothing is correct</div>
+        </div>
+        <div class="clue-row">
+          <div class="clue-numbers">
+            <div class="clue-digit">7</div>
+            <div class="clue-digit">8</div>
+            <div class="clue-digit">0</div>
+          </div>
+          <div class="clue-text">One number is correct but wrong placed</div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <input id="l4_input" class="code-input" maxlength="3" placeholder="???">
+        <div class="row">
+          <button class="btn inline" onclick="l4_check()">Unlock</button>
+          <button class="btn inline ghost" onclick="l4_reset()">Reset</button>
+        </div>
+      </div>
+
+      <div class="attempts">Attempts: <span id="l4_attempts">0</span></div>
+      <div id="l4_warn" class="warning"></div>
+
+      <div id="l4_success" class="success">
+        <h3>🎉 CODE CRACKED!</h3>
+        <div style="font-size:1.2rem;margin:8px 0;">Correct Code: <span id="l4_correct"></span></div>
+        <div class="panel" style="margin-top:10px;text-align:left;">
+          <strong>Solution breakdown:</strong>
+          <div id="l4_explain" style="margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEVEL 5 -->
+  <section id="level5" class="screen">
+    <div class="panel">
+      <h2 class="title">🧮 Level 5 — Cross Number Puzzle</h2>
+      <p class="subtitle">Each cross follows a pattern where the center relates to the four surrounding numbers.</p>
+
+      <div class="l5-crosses">
+        <div class="l5-cross">
+          <div class="l5-cell t">99</div>
+          <div class="l5-cell l">43</div>
+          <div class="l5-cell c">?</div>
+          <div class="l5-cell r">47</div>
+          <div class="l5-cell b">9</div>
+        </div>
+
+        <div class="l5-cross" id="l5_cross2">
+          <div class="l5-cell t">99</div>
+          <div class="l5-cell l">47</div>
+          <div class="l5-cell c" id="l5_c2"></div>
+          <div class="l5-cell r">15</div>
+          <div class="l5-cell b input" id="l5_b2" onclick="l5_showInput()">?</div>
+        </div>
+
+        <div class="l5-cross">
+          <div class="l5-cell t">99</div>
+          <div class="l5-cell l">21</div>
+          <div class="l5-cell c"></div>
+          <div class="l5-cell r">31</div>
+          <div class="l5-cell b">47</div>
+        </div>
+      </div>
+
+      <div class="center l5-note">Click the highlighted bottom cell to enter the missing center for Cross #2, then submit the 2-digit  code.</div>
+
+      <div class="row" style="margin-top:14px;">
+        <input id="l5_hiddenAnswer" class="l5-number-input" type="number" placeholder="?" style="display:none;">
+        <button id="l5_checkBtn" class="btn inline" onclick="l5_checkAnswer()" style="display:none;">Check</button>
+        <button class="btn inline ghost" onclick="l5_reset()">Reset</button>
+      </div>
+
+      <div class="stack" style="margin-top:10px;">
+        <input id="l5_final" class="l6-panel code" maxlength="2" placeholder="##">
+        <button class="btn inline" onclick="l5_submit()">Submit Code</button>
+      </div>
+
+      <div id="l5_ok" class="center hidden msg-ok">🚀 SYSTEM UNLOCKED! Level 5 complete.</div>
+      <div id="l5_bad" class="center hidden msg-bad">❌ Incorrect. Re-evaluate the pattern.</div>
+    </div>
+  </section>
+
+  <!-- LEVEL 6 -->
+  <section id="level6" class="screen">
+    <div class="panel l6-panel">
+      <h2 class="title">🔓 Level 6 — Security Access Terminal</h2>
+      <p class="subtitle">Reference directives, then authenticate with the final 4-digit code.</p>
+
+      <div class="l6-directive-grid">
+        <div class="l6-panelBox">
+          <div class="l6-panelId">ALPHA</div>
+          <div class="l6-seq"><span class="l6-cmd">↓</span><span class="l6-cmd">↓</span><span class="l6-cmd">↓</span></div>
+        </div>
+        <div class="l6-panelBox">
+          <div class="l6-panelId">BETA</div>
+          <div class="l6-seq"><span class="l6-cmd">→</span><span class="l6-cmd">↓</span><span class="l6-cmd">↓</span></div>
+        </div>
+        <div class="l6-panelBox">
+          <div class="l6-panelId">GAMMA</div>
+          <div class="l6-seq"><span class="l6-cmd">←</span><span class="l6-cmd">↓</span><span class="l6-cmd">→</span><span class="l6-cmd">↓</span><span class="l6-cmd">←</span></div>
+        </div>
+        <div class="l6-panelBox">
+          <div class="l6-panelId">DELTA</div>
+          <div class="l6-seq"><span class="l6-cmd">→</span><span class="l6-cmd">↓</span><span class="l6-cmd">←</span><span class="l6-cmd">↑</span></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <input id="l6_code" maxlength="4" class="code" placeholder="----" />
+        <button class="btn inline" onclick="l6_auth()">Authenticate</button>
+      </div>
+
+      <div id="l6_ok" class="center hidden msg-ok">✅ ACCESS GRANTED — You finished all levels! 🎉</div>
+      <div id="l6_bad" class="center hidden msg-bad">❌ ACCESS DENIED — Invalid code.</div>
+
+      <div class="l6-hint">💡 Hint: Use your pen</div>
+    </div>
+  </section>
+
+  <script>
+    /* ================== PROGRESS / NAV ================== */
+    const TOTAL_LEVELS = 6;
+    const LS_UNLOCK_KEY = 'hub_unlocked_level_v1';
+    const LS_VIEW_KEY = 'hub_current_view_v1';
+    const LS_TIMER_START = 'hub_timer_start_v1';
+    const LS_TIMER_END = 'hub_timer_end_v1';
+
+    function getUnlockedLevel() {
+      const v = parseInt(localStorage.getItem(LS_UNLOCK_KEY) || '1', 10);
+      return Number.isNaN(v) ? 1 : Math.min(Math.max(v, 1), TOTAL_LEVELS);
+    }
+    function setUnlockedLevel(level) {
+      const cur = getUnlockedLevel();
+      if (level > cur) {
+        localStorage.setItem(LS_UNLOCK_KEY, String(level));
+      }
+      updateHubButtons();
+    }
+    function saveCurrentView(viewId) {
+      localStorage.setItem(LS_VIEW_KEY, viewId);
+    }
+    function restoreView() {
+      const v = localStorage.getItem(LS_VIEW_KEY);
+      if (v && document.getElementById(v)) {
+        showScreen(v);
+      } else {
+        showScreen('hub');
+      }
+    }
+
+    function updateHubButtons() {
+      const unlocked = getUnlockedLevel();
+      for (let i = 1; i <= TOTAL_LEVELS; i++) {
+        const btn = document.getElementById('btnLevel' + i);
+        if (btn) btn.disabled = i > unlocked;
+        if (btn && i === 1 && unlocked <= 1) btn.classList.add('glow');
+        else if (btn) btn.classList.remove('glow');
+      }
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const el = document.getElementById(id);
+      if (el) el.classList.add('active');
+      // Always bring user to top when switching screens
+      try {
+        // Instant jump to top to avoid any need to scroll for the user
+        window.scrollTo(0, 0);
+        // Ensure focus enters the section for screen readers and keyboards
+        if (el && typeof el.scrollIntoView === 'function') {
+          el.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
+        }
+      } catch(_) {}
+
+      // inject level nav if needed
+      if (id.startsWith('level')) {
+        const levelNum = parseInt(id.replace('level', ''), 10);
+        ensureNav(el, levelNum);
+      }
+      saveCurrentView(id);
+      if (id === 'level1') l1_init();
+      if (id === 'level2') l2_init();
+    }
+
+    function ensureNav(container, levelNum) {
+      if (!container.querySelector('.topbar')) {
+        const tpl = document.getElementById('navTemplate');
+        const nav = tpl.content.cloneNode(true);
+        container.prepend(nav);
+      }
+      const prevBtn = container.querySelector('#prevLevelBtn');
+      const nextBtn = container.querySelector('#nextLevelBtn');
+      if (prevBtn) prevBtn.disabled = (levelNum <= 1);
+      if (nextBtn) nextBtn.disabled = (getUnlockedLevel() < (levelNum + 1)) || (levelNum >= TOTAL_LEVELS);
+    }
+
+    function openLevel(n) {
+      showScreen('level' + n);
+    }
+    function backToHub() {
+      showScreen('hub');
+    }
+    function prevLevel() {
+      const current = getCurrentLevelFromView();
+      if (current > 1) showScreen('level' + (current - 1));
+    }
+    function nextLevel() {
+      const current = getCurrentLevelFromView();
+      const unlocked = getUnlockedLevel();
+      if (current < TOTAL_LEVELS && unlocked >= current + 1) {
+        showScreen('level' + (current + 1));
+      }
+    }
+    function getCurrentLevelFromView() {
+      const v = localStorage.getItem(LS_VIEW_KEY) || 'hub';
+      if (v.startsWith('level')) return parseInt(v.replace('level', ''), 10);
+      return 0;
+    }
+    function markLevelComplete(levelNum) {
+      const next = Math.min(levelNum + 1, TOTAL_LEVELS);
+      setUnlockedLevel(next);
+
+      // enable Next Level button in this screen's nav (if present)
+      const view = document.getElementById('level' + levelNum);
+      if (view) {
+        const nextBtn = view.querySelector('#nextLevelBtn');
+        if (nextBtn && levelNum < TOTAL_LEVELS) nextBtn.disabled = false;
+      }
+      updateHubButtons();
+    }
+    function resetProgress() {
+      localStorage.removeItem(LS_UNLOCK_KEY);
+      localStorage.removeItem(LS_VIEW_KEY);
+      localStorage.removeItem(LS_TIMER_START);
+      localStorage.removeItem(LS_TIMER_END);
+      updateHubButtons();
+      showScreen('intro');
+    }
+
+    // Initial
+    updateHubButtons();
+    // Default to intro if no saved view
+    const savedView = localStorage.getItem(LS_VIEW_KEY);
+    if (savedView) restoreView(); else showScreen('intro');
+
+    /* ================== TIMER (TOTAL) ================== */
+    function beginEmergency() {
+      if (!localStorage.getItem(LS_TIMER_START)) {
+        localStorage.setItem(LS_TIMER_START, String(Date.now()));
+        localStorage.removeItem(LS_TIMER_END);
+      }
+      startTimerUI();
+      showScreen('hub');
+    }
+    function getElapsedMs() {
+      const start = parseInt(localStorage.getItem(LS_TIMER_START) || '0', 10);
+      const end = parseInt(localStorage.getItem(LS_TIMER_END) || '0', 10);
+      if (!start) return 0;
+      const now = end || Date.now();
+      return Math.max(0, now - start);
+    }
+    function fmt(ms) {
+      const s = Math.floor(ms / 1000);
+      const mm = Math.floor(s / 60).toString().padStart(2, '0');
+      const ss = (s % 60).toString().padStart(2, '0');
+      return `${mm}:${ss}`;
+    }
+    function showFinal() {
+      const ms = getElapsedMs();
+      document.getElementById('final_time').textContent = fmt(ms);
+      stopTimerUI(false); // freeze time on badge too
+      showScreen('final');
+    }
+    function restartMission() {
+      resetProgress();
+    }
+
+    // Floating timer UI
+    let _timerHandle = null;
+    function updateTimerUI() {
+      const el = document.getElementById('missionTimer');
+      const ms = getElapsedMs();
+      el.textContent = '⏱️ ' + fmt(ms);
+    }
+    function startTimerUI() {
+      const el = document.getElementById('missionTimer');
+      el.style.display = 'inline-block';
+      updateTimerUI();
+      if (_timerHandle) clearInterval(_timerHandle);
+      _timerHandle = setInterval(updateTimerUI, 1000);
+    }
+    function stopTimerUI(hide = true) {
+      if (_timerHandle) { clearInterval(_timerHandle); _timerHandle = null; }
+      if (hide) document.getElementById('missionTimer').style.display = 'none';
+      else updateTimerUI();
+    }
+
+    /* ================== LEVEL 1 ================== */
+    // Grid: 3x3. Predefined X at 2,2. Must place total 6 Xs without collinear triple.
+    const l1_numbers = [
+      [7,3,9],
+      [2,5,1],
+      [8,4,6]
+    ];
+    let l1_inited = false;
+    let l1_solvedGrid = false;
+    let l1_positions = new Set(['2,2']); // prefilled
+    const L1_MAX = 6; // total X including predefined
+
+    function l1_init() {
+      if (l1_inited) return;
+      l1_inited = true;
+
+      // build sensor grid
+      const g = document.getElementById('l1_xGrid');
+      g.innerHTML = '';
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+          const d = document.createElement('div');
+          d.className = 'cell';
+          d.dataset.pos = r + ',' + c;
+          if (r === 2 && c === 2) {
+            d.classList.add('pre');
+            d.textContent = 'X';
+          }
+          d.addEventListener('click', () => {
+            if (l1_solvedGrid) return;
+            if (d.classList.contains('pre')) return;
+            const pos = d.dataset.pos;
+            if (l1_positions.has(pos)) {
+              l1_positions.delete(pos);
+              d.classList.remove('placed');
+              d.textContent = '';
+            } else if (l1_positions.size < L1_MAX) {
+              l1_positions.add(pos);
+              d.classList.add('placed');
+              d.textContent = 'X';
+            }
+            document.getElementById('l1_checkBtn').disabled = (l1_positions.size !== L1_MAX);
+            document.getElementById('l1_warn').classList.add('hidden');
+          });
+          g.appendChild(d);
+        }
+      }
+
+      // build number grid
+      const n = document.getElementById('l1_numGrid');
+      n.innerHTML = '';
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+          const d = document.createElement('div');
+          d.className = 'cell';
+          d.textContent = String(l1_numbers[r][c]);
+          d.style.borderColor = 'rgba(0,212,255,.35)';
+          d.style.color = '#00d4ff';
+          n.appendChild(d);
+        }
+      }
+    }
+
+    function l1_reset() {
+      if (l1_solvedGrid) return;
+      l1_positions = new Set(['2,2']);
+      document.querySelectorAll('#l1_xGrid .cell').forEach(d => {
+        if (!d.classList.contains('pre')) {
+          d.classList.remove('placed');
+          d.textContent = '';
+        }
+      });
+      document.getElementById('l1_checkBtn').disabled = true;
+      document.getElementById('l1_warn').classList.add('hidden');
+      document.getElementById('l1_ok').classList.add('hidden');
+      document.getElementById('l1_success').classList.add('hidden');
+      document.getElementById('l1_code').value = '';
+    }
+
+    function l1_check() {
+      if (l1_positions.size !== L1_MAX) return;
+      const coords = Array.from(l1_positions).map(p => p.split(',').map(Number));
+      // check any collinear triple
+      for (let i = 0; i < coords.length - 2; i++) {
+        for (let j = i + 1; j < coords.length - 1; j++) {
+          for (let k = j + 1; k < coords.length; k++) {
+            const [x1,y1] = coords[i];
+            const [x2,y2] = coords[j];
+            const [x3,y3] = coords[k];
+            const area = Math.abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2));
+            if (area === 0) {
+              document.getElementById('l1_warn').classList.remove('hidden');
+              return;
+            }
+          }
+        }
+      }
+      l1_solvedGrid = true;
+      document.getElementById('l1_ok').classList.remove('hidden');
+    }
+
+    function l1_emptyPositions() {
+      const res = [];
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+          const pos = r + ',' + c;
+          if (!l1_positions.has(pos)) res.push(pos);
+        }
+      }
+      res.sort(); // deterministic
+      return res;
+    }
+
+    function l1_verifyCode() {
+      if (!l1_solvedGrid) return;
+      const empties = l1_emptyPositions();
+      const correct = empties.map(p => {
+        const [r,c] = p.split(',').map(Number);
+        return l1_numbers[r][c];
+      }).join('');
+      const input = (document.getElementById('l1_code').value || '').trim();
+      if (input === correct) {
+        document.getElementById('l1_success').classList.remove('hidden');
+        markLevelComplete(1);
+      } else {
+        alert('❌ Incorrect code. Check the empty positions against the number matrix.');
+      }
+    }
+
+    /* ================== LEVEL 2 ================== */
+    // 6x5 grid, letters must form BREACH and all 30 cells visited
+    const l2_layout = [
+      ['', '', '', 'H', '', ''],
+      ['B', '', '', '', '', 'A'],
+      ['', '', '', '', '', ''],
+      ['', 'R', '', '', 'C', ''],
+      ['', '', 'E', '', '', '']
+    ];
+    let l2_inited = false;
+    let l2_isDown = false;
+    let l2_path = [];
+    let l2_letters = [];
+    let l2_last = null;
+
+    function l2_init() {
+      if (l2_inited) return;
+      l2_inited = true;
+
+      const grid = document.getElementById('l2_grid');
+      grid.innerHTML = '';
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 6; c++) {
+          const d = document.createElement('div');
+          d.className = 'l2-cell';
+          d.dataset.r = r; d.dataset.c = c;
+          const letter = l2_layout[r][c];
+          if (letter) {
+            d.classList.add('letter');
+            d.dataset.letter = letter;
+            d.textContent = letter;
+          }
+          d.addEventListener('mousedown', l2_start);
+          d.addEventListener('mouseenter', l2_drag);
+          grid.appendChild(d);
+        }
+      }
+      document.addEventListener('mouseup', l2_stop);
+      l2_highlightTarget();
+      l2_updateStats();
+    }
+
+    function l2_start(e) {
+      e.preventDefault();
+      l2_reset(); // new path each time
+      l2_isDown = true;
+      l2_add(e.currentTarget);
+    }
+    function l2_drag(e) {
+      if (!l2_isDown) return;
+      e.preventDefault();
+      const cur = e.currentTarget;
+      if (!l2_last || l2_isAdjacent(cur, l2_last)) l2_add(cur);
+    }
+    function l2_stop() {
+      l2_isDown = false;
+      l2_last = null;
+    }
+    function l2_isAdjacent(a, b) {
+      const ar = +a.dataset.r, ac = +a.dataset.c;
+      const br = +b.dataset.r, bc = +b.dataset.c;
+      const rd = Math.abs(ar - br), cd = Math.abs(ac - bc);
+      return (rd === 1 && cd === 0) || (rd === 0 && cd === 1);
+    }
+    function l2_add(cell) {
+      const key = cell.dataset.r + '-' + cell.dataset.c;
+      if (l2_path.includes(key)) return;
+      l2_path.push(key);
+      cell.classList.add('connected');
+      l2_last = cell;
+
+      // letter order
+      const seq = ['B','R','E','A','C','H'];
+      const target = seq[l2_letters.length];
+      if (cell.dataset.letter) {
+        if (cell.dataset.letter === target) {
+          l2_letters.push(cell.dataset.letter);
+          l2_highlightTarget();
+        } else {
+          // wrong letter order → ignore taking it, but keep path
+        }
+      }
+
+      l2_updateStats();
+      l2_checkWin();
+    }
+    function l2_highlightTarget() {
+      document.querySelectorAll('#l2_grid .l2-cell.current').forEach(x => x.classList.remove('current'));
+      const seq = ['B','R','E','A','C','H'];
+      const target = seq[l2_letters.length];
+      if (!target) return;
+      const nextCell = Array.from(document.querySelectorAll('#l2_grid .l2-cell.letter'))
+        .find(x => x.dataset.letter === target && !x.classList.contains('connected'));
+      if (nextCell) nextCell.classList.add('current');
+    }
+    function l2_updateStats() {
+      document.getElementById('l2_cells').textContent = l2_path.length + '/30';
+      document.getElementById('l2_letters').textContent = l2_letters.length + '/6';
+    }
+    function l2_checkWin() {
+      if (l2_path.length === 30 && l2_letters.join('') === 'BREACH') {
+        document.getElementById('l2_message').classList.remove('hidden');
+        markLevelComplete(2);
+      }
+    }
+    function l2_reset() {
+      l2_path = [];
+      l2_letters = [];
+      l2_last = null;
+      document.getElementById('l2_message').classList.add('hidden');
+      document.querySelectorAll('#l2_grid .l2-cell').forEach(x => x.classList.remove('connected','current'));
+      l2_highlightTarget();
+      l2_updateStats();
+    }
+
+    /* ================== LEVEL 3 ================== */
+    // Minimal version: correct credential string
+    const L3_CORRECT = '3795'; // aligned with your file
+
+    function l3_submit() {
+      const code = (document.getElementById('l3_code').value || '').trim();
+      document.getElementById('l3_ok').classList.add('hidden');
+      document.getElementById('l3_bad').classList.add('hidden');
+      if (code === L3_CORRECT) {
+        document.getElementById('l3_ok').classList.remove('hidden');
+        markLevelComplete(3);
+      } else {
+        document.getElementById('l3_bad').classList.remove('hidden');
+      }
+    }
+
+    /* ================== LEVEL 4 (full logic) ================== */
+    const L4_CORRECT = '042';
+    const L4_STEPS = [
+      'From clue 4: 7, 3, 8 are NOT in the code',
+      'From clue 5: Since 7,8 are eliminated, 0 is correct but wrong placed (not position 3)',
+      'From clue 1: Since 8 is eliminated, either 6 or 2 is correct and well placed',
+      'From clue 3: 2 and 0 are correct but wrong placed, 6 is not in the code',
+      'Therefore in clue 1: 2 must be correct and well placed (position 3)',
+      'So 0 goes to position 2 (wrong placed earlier)',
+      'From clue 2: 4 is correct but wrong placed → position 1',
+      'Final answer: 042'
+    ];
+    let l4_attempts = 0;
+
+    function l4_check() {
+      const input = (document.getElementById('l4_input').value || '').trim();
+      document.getElementById('l4_warn').style.display = 'none';
+      document.getElementById('l4_success').style.display = 'none';
+
+      if (input.length !== 3) {
+        l4_showWarn('Please enter a 3-digit code.');
+        return;
+      }
+      l4_attempts++;
+      document.getElementById('l4_attempts').textContent = String(l4_attempts);
+
+      if (input === L4_CORRECT) {
+        document.getElementById('l4_slot1').textContent = input[0];
+        document.getElementById('l4_slot2').textContent = input[1];
+        document.getElementById('l4_slot3').textContent = input[2];
+        document.getElementById('l4_lock').textContent = '🔓';
+        document.getElementById('l4_correct').textContent = L4_CORRECT;
+        document.getElementById('l4_explain').innerHTML = L4_STEPS.map((s,i)=>`<p style="margin:6px 0;border-left:3px solid rgba(0,255,136,.3);padding-left:10px;"><strong>${i+1}.</strong> ${s}</p>`).join('');
+        document.getElementById('l4_success').style.display = 'block';
+        markLevelComplete(4);
+      } else {
+        l4_showWarn('❌ Incorrect code. Recheck the clues.');
+      }
+    }
+    function l4_showWarn(msg) {
+      const el = document.getElementById('l4_warn');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function l4_reset() {
+      l4_attempts = 0;
+      document.getElementById('l4_attempts').textContent = '0';
+      document.getElementById('l4_input').value = '';
+      document.getElementById('l4_slot1').textContent = '?';
+      document.getElementById('l4_slot2').textContent = '?';
+      document.getElementById('l4_slot3').textContent = '?';
+      document.getElementById('l4_lock').textContent = '🔒';
+      document.getElementById('l4_warn').style.display = 'none';
+      document.getElementById('l4_success').style.display = 'none';
+    }
+
+    /* ================== LEVEL 5 (full logic) ================== */
+    let l5_solved = false;
+    function l5_showInput() {
+      if (l5_solved) return;
+      document.getElementById('l5_hiddenAnswer').style.display = 'block';
+      document.getElementById('l5_checkBtn').style.display = 'inline-block';
+      document.getElementById('l5_hiddenAnswer').focus();
+    }
+    function l5_checkAnswer() {
+      const val = (document.getElementById('l5_hiddenAnswer').value || '').trim();
+      if (val === '37') {
+        document.getElementById('l5_c2').textContent = '37';
+        const b = document.getElementById('l5_b2');
+        b.textContent = '37';
+        b.classList.remove('input');
+        b.onclick = null;
+        l5_solved = true;
+        document.getElementById('l5_hiddenAnswer').style.display = 'none';
+        document.getElementById('l5_checkBtn').style.display = 'none';
+      } else {
+        alert('❌ Not quite right! Look more carefully at the pattern.');
+      }
+    }
+    function l5_submit() {
+      const code = (document.getElementById('l5_final').value || '').trim();
+      document.getElementById('l5_ok').classList.add('hidden');
+      document.getElementById('l5_bad').classList.add('hidden');
+      if (code === '37') {
+        document.getElementById('l5_ok').classList.remove('hidden');
+        markLevelComplete(5);
+      } else {
+        document.getElementById('l5_bad').classList.remove('hidden');
+      }
+    }
+    function l5_reset() {
+      l5_solved = false;
+      document.getElementById('l5_final').value = '';
+      document.getElementById('l5_ok').classList.add('hidden');
+      document.getElementById('l5_bad').classList.add('hidden');
+      document.getElementById('l5_hiddenAnswer').value = '';
+      document.getElementById('l5_hiddenAnswer').style.display = 'none';
+      document.getElementById('l5_checkBtn').style.display = 'none';
+      const c = document.getElementById('l5_c2');
+      const b = document.getElementById('l5_b2');
+      c.textContent = '?';
+      b.textContent = '?';
+      b.classList.add('input');
+      b.onclick = l5_showInput;
+    }
+
+    /* ================== LEVEL 6 ================== */
+    const L6_VALID = '1750';
+
+    function l6_auth() {
+      const input = (document.getElementById('l6_code').value || '').trim();
+      document.getElementById('l6_ok').classList.add('hidden');
+      document.getElementById('l6_bad').classList.add('hidden');
+      if (input === L6_VALID) {
+        document.getElementById('l6_ok').classList.remove('hidden');
+        // stop timer, show final
+        localStorage.setItem(LS_TIMER_END, String(Date.now()));
+        markLevelComplete(6);
+        setTimeout(showFinal, 600);
+      } else {
+        document.getElementById('l6_bad').classList.remove('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
