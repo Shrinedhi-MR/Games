@@ -361,8 +361,47 @@
   <section id="intro" class="screen active">
     <div class="hero">
       <span class="badge">ALERT • CYBER INCIDENT</span>
+
       <h1 class="title">ESCAPE ROOM: SYSTEM RESTORE</h1>
-      <p class="subtitle">Coordinate all 6 operations to restore the facility. Your mission time starts when you begin. Progress is saved and you can return at any time.</p>
+
+<div class="company-logo" style="font-size: 2.1rem; text-align: center; margin-bottom: 6px; user-select: none; letter-spacing:1px;">
+  🏢
+</div>
+<div class="story-title" style="font-size: 2.1rem; font-family: 'Orbitron','Segoe UI',sans-serif; font-weight: 700; color: #00ecb3; text-align: center; margin-bottom: 4px; letter-spacing: 2px;">
+  CORPORATE CRISIS
+</div>
+<div class="story-subtitle" style="font-size: 1.13rem; font-family:'Segoe UI',sans-serif; color: #aafff3; text-align:center; margin-bottom: 20px; letter-spacing: 1.2px;">
+  System Breach Protocol
+</div>
+
+<div class="crisis-alert" style="background: #1a0010; border: 2px solid #ff4747; box-shadow: 0 0 16px 2px #ff474777; color: #ffeaea; border-radius: 10px; font-size: 1.1rem; font-family: 'Segoe UI',sans-serif; font-weight: 600; text-align: center; padding: 18px 16px 13px 16px; margin: 14px auto 25px auto; max-width: 620px; letter-spacing:0.03em;">
+  🚨 <span style="color:#ff4747; font-weight:700;">CRITICAL ALERT: MULTIPLE SYSTEM FAILURES DETECTED!</span> 🚨<br>
+  <span style="font-weight: 500;">All departments require immediate intervention to restore operations!</span>
+</div>
+
+<div class="story-content" style="background:#172332; border:1.7px solid #00b6ff; border-radius:14px; box-shadow:0 0 18px 1px #00b6ffaa; color: #fafcff; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 680px; margin:32px auto 0 auto; padding: 28px 30px 22px 30px;">
+  <h3 style="color: #00d4ff; margin-bottom: 20px; font-size: 1.32rem; font-weight: bold; letter-spacing: 0.04em; text-align:center;">
+    📋 SITUATION BRIEFING
+  </h3>
+  <p style="margin-bottom: 15px; font-size: 1.08rem; line-height: 1.5; text-align: center;">
+    Your company is experiencing a coordinated cyber attack that has compromised multiple critical systems. As the emergency response team, you must work together to:
+  </p>
+  <ul style="margin: 20px 0; padding-left: 32px; color: #dadada; font-size: 1.02rem; line-height:1.7; text-align: left;">
+    <li>Navigate through each compromised department</li>
+    <li>Solve security puzzles to unlock systems</li>
+    <li>Collect access codes and restore operations</li>
+    <li>Complete all missions before the backup systems fail</li>
+  </ul>
+  <p style="color: #ff6b6b; font-weight: bold; text-align: center; margin-top: 25px; font-size: 1.08rem;">
+    ⚡ Time is critical - coordinate with your team to succeed!
+  </p>
+</div>
+
+
+
+      <p class="subtitle"></p>
+      
+      
       <div class="row">
         <button class="btn" onclick="beginEmergency()">🚨 Begin Emergency</button>
       </div>
@@ -376,37 +415,37 @@
     <div class="hub-grid">
       <div class="level-card">
         <div class="level-title">Level 1 — Matrix Security System</div>
-        <div class="level-desc">Place sensors without forming a straight line and decode the access matrix.</div>
+        <div class="level-desc"></div>
         <button id="btnLevel1" class="btn glow" onclick="openLevel(1)">Start Level 1</button>
       </div>
 
       <div class="level-card">
         <div class="level-title">Level 2 — Security Breach Grid</div>
-        <div class="level-desc">Connect the letters to form BREACH while visiting all cells.</div>
+        <div class="level-desc"></div>
         <button id="btnLevel2" class="btn" onclick="openLevel(2)" disabled>Level 2</button>
       </div>
 
       <div class="level-card">
         <div class="level-title">Level 3 — Audio Decoder</div>
-        <div class="level-desc">Listen carefully and enter the correct access credential.</div>
+        <div class="level-desc"></div>
         <button id="btnLevel3" class="btn" onclick="openLevel(3)" disabled>Level 3</button>
       </div>
 
       <div class="level-card">
         <div class="level-title">Level 4 — Code Cracking</div>
-        <div class="level-desc">Deduce the 3-digit code from multiple logic clues.</div>
+        <div class="level-desc"></div>
         <button id="btnLevel4" class="btn" onclick="openLevel(4)" disabled>Level 4</button>
       </div>
 
       <div class="level-card">
         <div class="level-title">Level 5 — Cross Number</div>
-        <div class="level-desc">Find the missing number based on cross patterns, then submit the final code.</div>
+        <div class="level-desc"></div>
         <button id="btnLevel5" class="btn" onclick="openLevel(5)" disabled>Level 5</button>
       </div>
 
       <div class="level-card">
         <div class="level-title">Level 6 — Security Access Terminal</div>
-        <div class="level-desc">Enter the final 4-digit authorization code to finish the run.</div>
+        <div class="level-desc"></div>
         <button id="btnLevel6" class="btn" onclick="openLevel(6)" disabled>Level 6</button>
       </div>
     </div>
@@ -417,32 +456,35 @@
   </section>
 
   <!-- FINAL / MISSION COMPLETE -->
-  <section id="final" class="screen">
-    <div class="panel">
-      <div class="hero">
-        <h2 class="title">🎉 MISSION ACCOMPLISHED!</h2>
-        <p class="subtitle">All systems restored successfully.</p>
-        <div class="stats">
-          <div class="stat">
-            <div class="muted">Total Time</div>
-            <div id="final_time" style="font-size:1.6rem;font-weight:800;margin-top:6px;">00:00</div>
-          </div>
-          <div class="stat">
-            <div class="muted">Missions Completed</div>
-            <div style="font-size:1.6rem;font-weight:800;margin-top:6px;">6</div>
-          </div>
+<section id="final" class="screen" style="background: linear-gradient(135deg, #13202b 0%, #091218 100%); min-height:100vh; padding:0;">
+  <div class="panel" style="max-width: 640px; margin: 38px auto 0 auto; background:rgba(19,34,46,0.98); border-radius: 15px; border: 2.5px solid #11d8a7; box-shadow: 0 0 34px 8px #0affe544; padding: 44px 30px 36px 30px;">
+    <div class="hero" style="text-align: center;">
+      <h2 class="title" style="color: #11fcb3; font-family:'Orbitron','Segoe UI',sans-serif; font-size:2.3rem; font-weight:bold; letter-spacing:2px; margin-bottom: 12px;">
+        🎉 MISSION ACCOMPLISHED!
+      </h2>
+      <p class="subtitle" style="font-size:1.15rem; color: #aafff3; margin-bottom: 30px;">All systems restored successfully.</p>
+      <div class="stats" style="display: flex; justify-content: center; gap: 48px; margin: 0 0 16px 0;">
+        <div class="stat" style="background: #181f26; padding: 20px 38px; border-radius: 12px; border: 2px solid #13f4c6; box-shadow: 0 0 14px 2px #00ffc024;">
+          <div class="muted" style="color: #9ed8e8; font-size: 1.03rem; text-transform:uppercase; letter-spacing: .05em;">Total Time</div>
+          <div id="final_time" style="font-size:1.6rem;font-weight:800;margin-top:6px;color:#fff;">00:00</div>
         </div>
-        <div class="panel" style="max-width:760px;">
-          <strong>Outstanding Teamwork!</strong>
-          <p class="muted" style="margin-top:6px;">Your rapid response successfully defended the company against the cyber attack. All departments are secure and normal operations can resume.</p>
-        </div>
-        <div class="row">
-          <button class="btn inline" onclick="restartMission()">🔁 New Mission</button>
-          <button class="btn inline ghost" onclick="backToHub()">↩️ Return to Hub</button>
+        <div class="stat" style="background: #181f26; padding: 20px 38px; border-radius: 12px; border: 2px solid #13f4c6; box-shadow: 0 0 14px 2px #00ffc024;">
+          <div class="muted" style="color: #9ed8e8; font-size: 1.03rem; text-transform:uppercase; letter-spacing: .05em;">Missions Completed</div>
+          <div style="font-size:1.6rem;font-weight:800;margin-top:6px;color:#fff;">6</div>
         </div>
       </div>
+      <div class="panel" style="max-width:760px; margin:36px auto 0 auto; background: #192834; border-radius: 10px; border: 2px solid #19ffe5; padding: 22px 26px;">
+        <strong style="color: #19ffe5; font-size: 1.08rem;">Outstanding Teamwork!</strong>
+        <p class="muted" style="margin-top:8px;color:#dff4fa; font-size: 1.06rem;">Your rapid response successfully defended the company against the cyber attack. All departments are secure and normal operations can resume.</p>
+      </div>
+      <div class="row" style="margin-top:34px; display: flex; justify-content: center; gap: 24px;">
+        <button class="btn inline" onclick="restartMission()" style="background:linear-gradient(90deg,#17ffc5,#41fdff); color:#222; font-size:1.08rem; font-weight:700; border-radius: 7px; border:none; box-shadow:0 0 8px #16ffe370; padding:9px 32px; margin:0 3px; cursor:pointer;transition:background 0.17s;">🔁 New Mission</button>
+        <button class="btn inline ghost" onclick="backToHub()" style="background:transparent; border:2px solid #17ffc5; color:#17ffc5; font-size:1.08rem; font-weight:700; border-radius:7px; padding:9px 32px; margin:0 3px; cursor:pointer; transition:background 0.17s, color 0.17s;">↩️ Return to Hub</button>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Level Navigation (shown inside levels) -->
   <template id="navTemplate">
@@ -459,11 +501,26 @@
   <section id="level1" class="screen">
     <div class="panel l1-wrap">
       <h2 class="title">🧩 Level 1 — Matrix Security System</h2>
-      <p class="subtitle">Place 6 sensors (X) without any three forming a straight line. Then enter the access code from the number matrix using the empty positions.</p>
-<p><strong>⚠️ CRITICAL RULE:</strong> No three X marks can form a straight line (horizontal, vertical, or diagonal)!</p>
+
+      <div class="instructions" style="max-width: 460px; margin: 24px auto; background-color: #1a1a1a; border: 1.5px solid #444; border-radius: 8px; padding: 18px 22px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #ddd; box-shadow: 0 0 15px 1px #3a7adf40;">
+  <h3 style="color: #4a9eff; font-weight: 700; font-size: 1.5rem; margin-bottom: 14px; text-align: center; letter-spacing: 0.05em;">
+    🎯 MISSION:
+  </h3>
+  <p style="font-size: 1rem; margin-bottom: 12px; line-height: 1.5;">
+    The security system has one sensor already placed <span style="color:#ff4d4d; font-weight: 700;">(marked in red)</span>. You must place <strong style="color:#ffb33a;">5 additional X sensors</strong> on the 3×3 grid.
+  </p>
+  <p style="font-size: 1rem; font-weight: 700; color: #fc426a; margin: 0; line-height: 1.4; text-align: center;">
+    ⚠️ CRITICAL RULE: No three X marks can form a straight line (horizontal, vertical, or diagonal)!
+  </p>
+</div>
+
+
+
+
+    
       <div class="spacer"></div>
 
-      <div class="center muted">Sensor Grid</div>
+      <div class="center muted">Sensor Placement</div>
       <div class="grid" id="l1_xGrid"></div>
 
       <div class="row center">
@@ -475,8 +532,13 @@
       <div id="l1_ok" class="center hidden msg-ok">✅ Sensor grid configured. Now decode the access code.</div>
 
       <div class="spacer"></div>
-      <div class="center muted">Number Matrix</div>
-      <p>Enter the 3-digit access code to proceed.</p>
+      <div class="center muted">Access Matrix</div>
+
+ <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #ccc; font-size: 1rem; line-height: 1.5; max-width: 480px; margin: 16px auto; text-align: center;">
+  Enter the 3-digit access code to proceed.
+</p>
+
+
       <div class="grid" id="l1_numGrid"></div>
 
       <div class="stack">
@@ -492,7 +554,36 @@
   <section id="level2" class="screen">
     <div class="panel">
       <h2 class="title">🚨 Level 2 — Security Breach Grid</h2>
-      <p class="subtitle">Drag a continuous path visiting all 30 cells and connecting letters to form BREACH.</p>
+
+      <p class="subtitle"></p>
+<div class="header">
+        
+       <div class="alert-box" style="border: 2px solid #ff3939; background-color: #220d0d; border-radius: 8px; box-shadow: 0 0 12px 1px #ff393930; padding: 18px 14px 14px 14px; text-align: center; margin-bottom: 12px;">
+    <h2 style="color: #ff3939; font-size: 1.1rem; font-family: 'Orbitron', 'Segoe UI', Tahoma, sans-serif; font-weight: 700; margin: 0 0 8px 0; letter-spacing: 1px;">
+        ⚠️ ALERT: SYSTEM COMPROMISED!
+    </h2>
+    <p style="color: #ffbfbf; font-size: 0.98rem; margin: 0; line-height: 1.4; font-weight: 500;">
+        Security facility grid is compromised! Navigate through <b style="color:#fff;">ALL</b> grid cells to spell <span style="color:#fc426a; font-weight: 700;">BREACH</span> and unlock the override system.
+    </p>
+</div>
+
+<div style="border: 2px solid #555; padding: 20px 20px 18px 20px; background-color: #151515; color: #e1e1e1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 15px; border-radius: 10px; line-height: 1.7; max-width: 520px; margin: 0 auto; box-shadow: 0 0 12px 2px #ff4d4daa;">
+  <strong style="color: #ff4d4d; font-size: 18px; text-transform: uppercase; display: block; margin-bottom: 12px; letter-spacing: 1.2px; font-family: 'Orbitron', 'Segoe UI', Tahoma, sans-serif;">
+    ESCAPE PROTOCOL:
+  </strong>
+  <ul style="padding-left: 18px; margin: 0; list-style-type: disc;">
+    <li style="margin-bottom: 8px;">Connect the scattered letters to form a security override word</li>
+    <li style="margin-bottom: 8px;">Must pass through <strong style="color:#fffadc;">EVERY</strong> single cell in the grid</li>
+    <li>Form one continuous path from start to finish</li>
+  </ul>
+</div>
+
+
+
+    <div class="puzzle-container">
+
+      
+
 
       <div id="l2_grid" class="l2-grid"></div>
 
@@ -501,9 +592,41 @@
         <div>Letters Connected: <span id="l2_letters">0/6</span></div>
       </div>
 
+
+
+
+
       <div class="row">
         <button class="btn inline" onclick="l2_reset()">Reset</button>
+        
       </div>
+
+
+     <div class="how-to-play" style="max-width: 480px; margin: 24px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #eee; background: #1a1a1a; padding: 16px 22px; border-radius: 8px; border: 1.5px solid #444; box-shadow: 0 0 12px 1px #3a7adf40;">
+
+    <h3 style="text-align: center; color: #4a9eff; font-weight: 700; font-size: 1.4rem; letter-spacing: 0.03em; margin-bottom: 16px;">How to play</h3>
+
+    <div class="play-example" style="display: flex; align-items: center; justify-content: space-around; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+        
+        <div class="example-dots" style="display: flex; gap: 8px;">
+            <div class="example-dot" style="background-color: #ff3939; color: white; font-weight: bold; font-family: 'Consolas', monospace; font-size: 1.2rem; width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; user-select: none;">B</div>
+            <div class="example-dot" style="background-color: #ff3939; color: white; font-weight: bold; font-family: 'Consolas', monospace; font-size: 1.2rem; width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; user-select: none;">R</div>
+            <div class="example-dot" style="background-color: #ff3939; color: white; font-weight: bold; font-family: 'Consolas', monospace; font-size: 1.2rem; width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; user-select: none;">E</div>
+        </div>
+
+        <div style="color: #4a9eff; font-weight: 700; user-select: none; min-width: 120px; text-align: center;">Connect letters in order</div>
+
+        <div class="example-grid" style="width: 36px; height: 36px; background-color: #fff; border-radius: 6px; box-shadow: 0 0 5px #4a9effaa inset; user-select: none; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; line-height: 1;">⬜</div>
+
+        <div style="color: #4a9eff; font-weight: 700; user-select: none; min-width: 96px; text-align: center;">Fill every cell</div>
+    </div>
+    
+    <p style="text-align: center; margin-top: 15px; font-size: 14px; line-height: 1.4; color: #bbb; user-select: none;">
+        Click and drag to create a path that visits all 30 cells and connects all the letters
+    </p>
+</div>
+
+
 
       <div id="l2_message" class="center hidden msg-ok">🎉 Security override complete! BREACH confirmed.</div>
     </div>
@@ -513,13 +636,60 @@
   <section id="level3" class="screen">
     <div class="panel">
       <h2 class="title">🔊 Level 3 — Audio Decoder</h2>
-      <p class="subtitle">Listen to the classified audio and enter the correct access credential.</p>
+      <p class="subtitle"></p>
+
+
+     <div class="instructions-box" style="max-width: 460px; margin: 24px auto; background-color: #1a1a1a; border: 1.5px solid #444; border-radius: 8px; padding: 18px 22px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #ddd; box-shadow: 0 0 15px 1px #3a7adf40;">
+  <h3 style="color: #00d4ff; margin-bottom: 15px; font-weight: 700; font-size: 1.45rem; text-align: center; letter-spacing: 0.05em;">
+    📋 Mission Instructions:
+  </h3>
+  <ul class="instructions-list" style="padding-left: 20px; margin: 0; font-size: 1rem; line-height: 1.5;">
+    <li style="margin-bottom: 8px;">Listen to the classified audio file</li>
+    <li style="margin-bottom: 8px;">Complete the security verification</li>
+    <li style="margin-bottom: 8px;">Enter the required data fields</li>
+    <li>Submit for system access</li>
+  </ul>
+</div>
+
+
+
+      
 
       <div class="l3-audio">
         <audio id="l3_audio" controls preload="auto">
           <source src="bullet_code_2684.wav" type="audio/wav" />
           Your browser does not support the audio element.
         </audio>
+
+
+<!-- Grid for the three decode items -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1000px; margin: 32px auto;">
+  <div class="decode-item" style="background: #222; border-radius: 12px; padding: 22px 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 0 0 3px #0ff08b, 0 0 18px 2px #0ff08b60; text-align: center; border: 2px solid #0ff08b;">
+    <h4 style="margin: 0 0 10px; color: #ff493a; font-weight: 700; font-size: 1.25rem;">🎯 Data Processing</h4>
+    <p style="margin: 0; font-size: 1rem; line-height: 1.5; font-weight: 500;">Extract required information from the transmission.</p>
+  </div>
+  <div class="decode-item" style="background: #222; border-radius: 12px; padding: 22px 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 0 0 3px #15b2ff, 0 0 18px 2px #15b2ff60; text-align: center; border: 2px solid #15b2ff;">
+    <h4 style="margin: 0 0 10px; color: #15b2ff; font-weight: 700; font-size: 1.25rem;">🔢 System Input</h4>
+    <p style="margin: 0; font-size: 1rem; line-height: 1.5; font-weight: 500;">Complete all mandatory data fields for verification.</p>
+  </div>
+  <div class="decode-item" style="background: #222; border-radius: 12px; padding: 22px 20px; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 0 0 3px #ffce33, 0 0 18px 2px #ffce3360; text-align: center; border: 2px solid #ffce33;">
+    <h4 style="margin: 0 0 10px; color: #ffce33; font-weight: 700; font-size: 1.25rem;">⚡ Access Control</h4>
+    <p style="margin: 0; font-size: 1rem; line-height: 1.5; font-weight: 500;">Submit credentials to unlock secure systems.</p>
+  </div>
+</div>
+
+<!-- Separate system notice grid -->
+<div class="hint-box" style="max-width: 500px; margin: 28px auto 0 auto; background-color: #162136; padding: 17px 20px; border-radius: 14px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #f7fae3; font-size: 1.09rem; box-shadow: 0 0 24px 2px #0dbfff55; text-align: center; font-weight: 600;">
+  💡 <strong style="color: #38bdff;">System Notice:</strong> Complete all required fields to proceed with security verification.
+</div>
+
+
+
+           <div class="decode-grid">
+
+
+       
+
         <div class="muted">Tip: Hear the rhythm/code within the pattern.</div>
       </div>
 
@@ -537,7 +707,27 @@
   <section id="level4" class="screen">
     <div class="panel l4-wrap">
       <h2 class="title">🔐 Level 4 — Will You Crack the Code?</h2>
-      <p class="subtitle">Analyze the clues. Each clue tells you how many digits are correct and if they're in the correct position.</p>
+
+      <div class="instructions" style="background: #171d25; color: #fafcfd; border-radius: 12px; border: 1.5px solid #25d0e6; box-shadow: 0 0 14px 1px #2fffd522; max-width: 520px; margin: 28px auto 20px auto; padding: 24px 24px 18px 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <h3 style="color: #19ffe5; font-weight: bold; font-size: 1.23rem; margin-bottom: 13px; letter-spacing: 0.04em;">
+        🎯 MISSION:
+    </h3>
+    <p style="margin-bottom: 13px; line-height: 1.5;">
+        Analyze the clues below to determine the correct <strong style="color:#ffce33;">3-digit code</strong>. Each clue provides information about how many digits are correct and whether they're in the right position.
+    </p>
+    <p style="font-weight: bold; color: #ff5c6c; margin-bottom: 8px;">
+        ⚠️ LEGEND:
+    </p>
+    <ul style="margin-top: 10px; padding-left: 22px; line-height: 1.6;">
+        <li><strong style="color:#7cff8c;">Correct and well placed:</strong> The digit is in the code AND in the correct position</li>
+        <li><strong style="color:#23bbec;">Correct but wrong placed:</strong> The digit is in the code BUT in the wrong position</li>
+        <li><strong style="color:#fa3b71;">Nothing is correct:</strong> None of the digits are in the code</li>
+    </ul>
+</div>
+
+            
+
+      <p class="subtitle"></p>
 
       <div class="lock-display">
         <div class="lock-icon" id="l4_lock">🔒</div>
@@ -617,7 +807,21 @@
   <section id="level5" class="screen">
     <div class="panel">
       <h2 class="title">🧮 Level 5 — Cross Number Puzzle</h2>
-      <p class="subtitle">Each cross follows a pattern where the center relates to the four surrounding numbers.</p>
+
+
+     <h3 style="text-align: center; color: #19ffe5; font-family: 'Orbitron','Segoe UI',sans-serif; font-size: 2rem; font-weight: bold; letter-spacing: 1.5px; margin-top: 18px; margin-bottom: 18px;">
+  MATHEMATICAL CROSSES
+</h3>
+
+<div class="instructions" style="background: #171d25; color: #fafcfd; border-radius: 11px; border: 1.5px solid #19ffe5; box-shadow: 0 0 13px 0 #1efdff55; max-width: 520px; margin: 0 auto 25px auto; padding: 24px 24px 18px 24px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <h3 style="color: #35ff7a; font-weight: bold; font-size: 1.17rem; margin-bottom: 12px; letter-spacing: 0.04em;">
+        🎯 OBJECTIVE:
+    </h3>
+    <p style="margin-bottom: 11px; line-height: 1.5;">
+        Find the missing number in the middle cross. Each cross follows a <span style="color:#ffd351; font-weight:600;">mathematical pattern</span> where the center number relates to the four surrounding numbers.
+    </p>
+</div>
+
 
       <div class="l5-crosses">
         <div class="l5-cross">
@@ -667,7 +871,7 @@
   <section id="level6" class="screen">
     <div class="panel l6-panel">
       <h2 class="title">🔓 Level 6 — Security Access Terminal</h2>
-      <p class="subtitle">Reference directives, then authenticate with the final 4-digit code.</p>
+      <p class="subtitle"></p>
 
       <div class="l6-directive-grid">
         <div class="l6-panelBox">
